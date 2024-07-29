@@ -73,3 +73,39 @@ main {
 .event-card.disabled button {
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event-list {
+    flex-direction: column;
+  }
+
+  .available-events, .selected-events {
+    width: 100%;
+  }
+
+  .event-card, .selected-event-card {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .event-card-left {
+    border-right: none;
+    border-bottom: 2px solid #ddd; /* Adjust border for mobile */
+    padding-right: 0;
+    padding-bottom: 10px; /* Add padding for better spacing */
+  }
+
+  .event-initial {
+    font-size: 40px; /* Adjust size for mobile */
+  }
+
+  .event-card-right {
+    padding-left: 0;
+    padding-top: 10px; /* Add padding for better spacing */
+  }
+}
