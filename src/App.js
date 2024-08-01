@@ -32,7 +32,7 @@ function App() {
     if (clientIp) {
       async function checkVPNStatus() {
         try {
-          const response = await axios.get('http://localhost:5000/api/vpn-status', {
+          const response = await axios.get('https://vpn-detection-server.onrender.com/api/vpn-status', {
             headers: {
               'X-Forwarded-For': clientIp,
             },
