@@ -1,40 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import EventList from './components/EventList';
-import events from './mockEvents';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import EventList from "./components/EventList";
+import events from "./mockEvents";
+import "./App.css";
 
 function App() {
   const [selectedEvents, setSelectedEvents] = useState(() => {
-    const savedEvents = localStorage.getItem('selectedEvents');
+    const savedEvents = localStorage.getItem("selectedEvents");
     return savedEvents ? JSON.parse(savedEvents) : [];
   });
 
   const [isUsingVPN, setIsUsingVPN] = useState(null);
   const [isProtonVPN, setIsProtonVPN] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null);
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState(
+    localStorage.getItem("token")
+      ? JSON.parse(localStorage.getItem("token"))
+      : null
+  );
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
     if (!username || !password) {
-      setError('Please enter both username and password.');
+      setError("Please enter both username and password.");
       return;
     }
-    
-    setIsLoading(true)
+
+    setIsLoading(true);
     try {
-      const response = await axios.post('https://vpn-detection-server.onrender.com/api/login', { username, password });
-      localStorage.setItem('token', JSON.stringify(response.data.token));
+      const response = await axios.post(
+        "https://vpn-detection-server.onrender.com/api/login",
+        { username, password }
+      );
+      localStorage.setItem("token", JSON.stringify(response.data.token));
       setToken(response.data.token);
       checkVPNStatus(response.data.token);
     } catch (error) {
-      setError(error?.response?.data?.error || "")
-    }
-    finally{
-      setIsLoading(false)
+      setError(error?.response?.data?.error || "");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,44 +49,49 @@ function App() {
   }, [token]);
 
   const checkVPNStatus = async (token) => {
+    setIsLoading(true);
     try {
-      const response = await axios.get('https://vpn-detection-server.onrender.com/api/vpn-status', {
+      const response = await axios.get("http://localhost:5000/api/vpn-status", {
         headers: {
-          'x-access-token': token,
-          'X-Forwarded-For': await getClientIp(),
+          "x-access-token": token,
+          "X-Forwarded-For": await getClientIp(),
         },
       });
       const { isUsingVPN, isProtonVPN, username } = response.data;
       setIsUsingVPN(isUsingVPN);
       setIsProtonVPN(isProtonVPN);
-      
     } catch (error) {
-      console.error('Error fetching VPN status:', error);
+      console.error("Error fetching VPN status:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const getClientIp = async () => {
     try {
-      const response = await axios.get('https://api.ipify.org?format=json');
+      const response = await axios.get("https://api.ipify.org?format=json");
       return response.data.ip;
     } catch (error) {
-      console.error('Error fetching client IP address:', error);
+      console.error("Error fetching client IP address:", error);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setToken(null);
     setIsUsingVPN(null);
     setIsProtonVPN(null);
   };
 
   useEffect(() => {
-    localStorage.setItem('selectedEvents', JSON.stringify(selectedEvents));
+    localStorage.setItem("selectedEvents", JSON.stringify(selectedEvents));
   }, [selectedEvents]);
 
   const handleSelectEvent = (event) => {
-    if (selectedEvents.length < 3 && !selectedEvents.some((e) => e.id === event.id)) {
+    if (
+      selectedEvents.length < 3 &&
+      !selectedEvents.some((e) => e.id === event.id)
+    ) {
       setSelectedEvents([...selectedEvents, event]);
     }
   };
@@ -97,26 +108,43 @@ function App() {
             type="text"
             placeholder="Username"
             value={username}
-            onChange={(e) => {setError(''); setUsername(e.target.value)}}
+            onChange={(e) => {
+              setError("");
+              setUsername(e.target.value);
+            }}
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => {setError(''); setPassword(e.target.value)}}
+            onChange={(e) => {
+              setError("");
+              setPassword(e.target.value);
+            }}
           />
           {error && <div className="error-message">{error}</div>}
-          <button onClick={handleLogin} disabled={isLoading}>{isLoading ? '...' : 'Login'}</button>
+          <button onClick={handleLogin} disabled={isLoading}>
+            {isLoading ? "..." : "Login"}
+          </button>
         </div>
       ) : (
         <div>
-          {!isUsingVPN && !isProtonVPN ? (
-            <div>Access restricted. You are not authorized to access this website.</div>
-              
-          ) : token && isUsingVPN && isProtonVPN ? (
-            <> <div className='content-header'>
-              <span>Welcome, authorized ProtonVPN user!</span>
+          {isLoading ? (
+            <div>
+              <span>Checking if connected to ProtonVPN...</span>
               <button onClick={handleLogout}>Logout</button>
+            </div>
+          ) : !isUsingVPN && !isProtonVPN ? (
+            <div>
+              Access restricted. You are not authorized to access this website.
+              Please connect to ProtonVPN
+            </div>
+          ) : token && isUsingVPN && isProtonVPN ? (
+            <>
+              {" "}
+              <div className="content-header">
+                <span>Welcome, authorized ProtonVPN user!</span>
+                <button onClick={handleLogout}>Logout</button>
               </div>
               <div className="App">
                 <header>
@@ -133,10 +161,7 @@ function App() {
               </div>
             </>
           ) : (
-            <div>
-                <span>Checking if connected to ProtonVPN...</span>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
+            <>Loading..!</>
           )}
         </div>
       )}
