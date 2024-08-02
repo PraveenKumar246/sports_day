@@ -51,7 +51,7 @@ function App() {
   const checkVPNStatus = async (token) => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/vpn-status", {
+      const response = await axios.get("https://vpn-detection-server.onrender.com/api/vpn-status", {
         headers: {
           "x-access-token": token,
           "X-Forwarded-For": await getClientIp(),
