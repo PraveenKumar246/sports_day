@@ -21,7 +21,7 @@ function App() {
       : null
   );
   const [error, setError] = useState("");
-  const [countdown, setCountdown] = useState(0);
+  const [countdown, setCountdown] = useState(15);
 
   const handleLogin = async () => {
     if (!username || !password) {
