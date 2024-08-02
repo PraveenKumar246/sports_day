@@ -110,11 +110,9 @@ function App() {
         </div>
       ) : (
         <div>
-          {isUsingVPN === null || isProtonVPN === null ? (
-              <div>
-                <span>Checking if connected to ProtonVPN...</span>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
+          {!isUsingVPN && !isProtonVPN ? (
+            <div>Access restricted. You are not authorized to access this website.</div>
+              
           ) : token && isUsingVPN && isProtonVPN ? (
             <> <div className='content-header'>
               <span>Welcome, authorized ProtonVPN user!</span>
@@ -135,7 +133,10 @@ function App() {
               </div>
             </>
           ) : (
-            <div>Access restricted. You are not authorized to access this website.</div>
+            <div>
+                <span>Checking if connected to ProtonVPN...</span>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
           )}
         </div>
       )}
