@@ -112,7 +112,7 @@ function App() {
         <div>
           {isUsingVPN === null || isProtonVPN === null ? (
               <div>
-                <span>Loading...</span>
+                <span>Checking if connected to ProtonVPN...</span>
                 <button onClick={handleLogout}>Logout</button>
               </div>
           ) : token && isUsingVPN && isProtonVPN ? (
