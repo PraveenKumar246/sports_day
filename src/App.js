@@ -81,6 +81,7 @@ function App() {
     setToken(null);
     setIsUsingVPN(null);
     setIsProtonVPN(null);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -132,7 +133,7 @@ function App() {
           {isLoading ? (
             <div>
               <span>Checking if connected to ProtonVPN...</span>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={() => checkVPNStatus(token)}>Refresh</button>
             </div>
           ) : !isUsingVPN && !isProtonVPN ? (
             <div>
