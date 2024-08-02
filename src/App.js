@@ -21,6 +21,7 @@ function App() {
       : null
   );
   const [error, setError] = useState("");
+  const [countdown, setCountdown] = useState(0);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -101,6 +102,23 @@ function App() {
     setSelectedEvents(selectedEvents.filter((e) => e.id !== event.id));
   };
 
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleClick = () => {
+    if (countdown === 0) {
+      setCountdown(15); // Start the countdown
+      checkVPNStatus(token);
+    }
+  };
   return (
     <div>
       {!token ? (
@@ -133,7 +151,7 @@ function App() {
           {isLoading ? (
             <div>
               <span>Checking if connected to ProtonVPN...</span>
-              <button onClick={() => checkVPNStatus(token)}>Refresh</button>
+              <button onClick={() => checkVPNStatus(token)}>{countdown > 0 ? `Wait ${countdown}s` : 'Refresh'}</button>
             </div>
           ) : !isUsingVPN && !isProtonVPN ? (
             <div>
