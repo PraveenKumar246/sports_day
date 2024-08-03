@@ -151,7 +151,7 @@ function App() {
           {isLoading ? (
             <div>
               <span>Checking if connected to ProtonVPN...</span>
-              <button disabled={countdown === 0} onClick={handleClick}>{countdown > 0 ? `Wait ${countdown}s` : 'Refresh'}</button>
+              <button disabled={countdown > 0} onClick={handleClick}>{countdown > 0 ? `Wait ${countdown}s` : 'Refresh'}</button>
             </div>
           ) : !isUsingVPN && !isProtonVPN ? (
             <div>
