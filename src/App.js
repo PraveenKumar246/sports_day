@@ -149,12 +149,12 @@ function App() {
       ) : (
         <div>
           {isLoading ? (
-            <div className="d-flex justify-content-center align-items-center">
+            <div className="login-container">
               <span>Checking if connected to ProtonVPN...</span>
               <button disabled={countdown > 0} onClick={handleClick}>{countdown > 0 ? `Wait ${countdown}s` : 'Refresh'}</button>
             </div>
           ) : !isUsingVPN && !isProtonVPN ? (
-            <div className="d-flex justify-content-center align-items-center">
+            <div className="login-container">
               Access restricted. You are not authorized to access this website.
               Please connect to ProtonVPN
             </div>
