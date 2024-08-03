@@ -155,8 +155,10 @@ function App() {
             </div>
           ) : !isUsingVPN && !isProtonVPN ? (
             <div className="login-container">
+             <span>
               Access restricted. You are not authorized to access this website.
               Please connect to ProtonVPN
+            </span>
             </div>
           ) : token && isUsingVPN && isProtonVPN ? (
             <>
