@@ -143,7 +143,7 @@ function App() {
           />
           {error && <div className="error-message">{error}</div>}
           <button onClick={handleLogin} disabled={isLoading}>
-            {isLoading ? "..." : "Login"}
+            {isLoading ? "Logging..." : "Login"}
           </button>
         </div>
       ) : (
